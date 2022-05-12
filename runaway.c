@@ -104,10 +104,15 @@ void move(char direction) {
 }
 
 void blowup() {
+
+  if(!haspill) return;
+
   blowupagain(hero.x, hero.y, 0, 1, 3);
   blowupagain(hero.x, hero.y, 0, -1, 3);
   blowupagain(hero.x, hero.y, 1, 0, 3);
   blowupagain(hero.x, hero.y, 1, 0, 3);
+
+  haspill = 0;
 }
 
 void blowupagain(int x, int y, int sumx, int sumy, int qtd) {

@@ -95,7 +95,7 @@ void readmap(MAP* m) {
 }
 
 void printmap(MAP* m) {
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < m->row; i++) {
     printf("%s\n", m->matriz[i]);
   }
 }
