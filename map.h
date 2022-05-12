@@ -3,6 +3,7 @@
 #define EMPTY '.'
 #define WALL_V '|'
 #define WALL_H '-'
+#define PILULA 'P'
 
 struct map {
   char** matriz;

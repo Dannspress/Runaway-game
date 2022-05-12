@@ -6,6 +6,7 @@
 
 MAP m;
 POSITION hero;
+int haspill = 0;
 
 int wayofghost(int actualx, int actualy, int* xgoal, int* ygoal) {
   int options[4][2] =  {
@@ -93,10 +94,35 @@ void move(char direction) {
   if(!canwalk(&m, HERO, nextx, nexty))
     return;
 
+  if(itscharacter(&m, PILULA, nextx, nexty))
+    haspill = 1;
+
   walkinmap(&m, hero.x, hero.y, nextx, nexty);
   hero.x = nextx;
   hero.y = nexty;
   
+}
+
+void blowup() {
+  blowupagain(hero.x, hero.y, 0, 1, 3);
+  blowupagain(hero.x, hero.y, 0, -1, 3);
+  blowupagain(hero.x, hero.y, 1, 0, 3);
+  blowupagain(hero.x, hero.y, 1, 0, 3);
+}
+
+void blowupagain(int x, int y, int sumx, int sumy, int qtd) {
+
+  if(qtd = 0) return;
+
+  int newx = x + sumx;
+  int newy = y + sumy;
+
+  if(!itsvalid(&m, newx, newy-1)) return;
+  if(itswall(&m, newx, newy-1)) return;
+
+  m.matriz[newx][newy+1] = EMPTY;
+  blowupagain(newx, newy, sumx, sumy, qtd - 1);
+
 }
 
 int main() {
@@ -105,11 +131,15 @@ int main() {
   findmap(&m, &hero, HERO);
 
   do {
+    printf("Has pill? %s\n", (haspill ? "YES" : "NO"));
     printmap(&m);
 
     char command;
     scanf(" %c", &command);
     move(command);
+
+    if(command == BOMB) blowup();
+
     ghost();
   } while(!over());
   
