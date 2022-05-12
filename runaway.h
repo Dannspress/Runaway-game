@@ -1,3 +1,2 @@
-void freemap();
-void allocmap();
-void readmap();
+void move(char direction);
+int over();

@@ -1,51 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "runaway.h"
+#include "map.h"
 
-char** map;
-int row;
-int col;
+MAP m;
+POSITION hero;
 
-void freemap() {
-  for (int i = 0; i < row; i++) {
-    free(map[i]);
-  }
-  free(map);
+int over() {
+  return 0;
 }
 
-void allocmap() {
-  map = malloc(sizeof(char*) * row);
-  for (int i = 0; i < row; i++) {
-    map[i] = malloc(sizeof(char) * (col+1));
+void move(char direction) {
+  int x;
+  int y;
+
+  m.matriz[hero.x][hero.y] = '.';
+
+  switch (direction)
+  {
+  case 'a':
+    m.matriz[hero.x][hero.y-1] = '@';
+    hero.y--;
+    break;
+  case 'w':
+    m.matriz[hero.x-1][hero.y] = '@';
+    hero.x--;
+    break;
+  case 's':
+    m.matriz[hero.x+1][hero.y] = '@';
+    hero.x++;
+    break;
+  case 'd':
+    m.matriz[hero.x][hero.y+1] = '@';
+    hero.y++;
+    break;
   }
+  
 }
-
-void readmap() {
-  FILE* f;
-  f = fopen("map.txt", "r");
-  if(f == 0) {
-    printf("ERROR on reading map.\n");
-    exit(1);
-  }
-
-  fscanf(f, "%d %d", &row, &col);
-
-  allocmap();
-
-  for (int i = 0; i < 5; i++) {
-    fscanf(f, "%s", map[i]);
-  }
-
-  fclose(f);
-}
-
 
 int main() {
 
-  readmap();
+  readmap(&m);
+  findmap(&m, &hero, '@');
 
-  for (int i = 0; i < 5; i++) {
-    printf("%s\n", map[i]);
-  }
+  do {
+    printmap(&m);
+
+    char command;
+    scanf(" %c", &command);
+    move(command);
+  } while(!over());
   
-  freemap();
+  freemap(&m);
 }
